@@ -1,5 +1,9 @@
 const { app, BrowserWindow, shell, Tray, Menu, globalShortcut, nativeImage, ipcMain } = require('electron');
+const mediaEnabled = { audio: true, video: true };
 const path = require('path');
+const locked = app.requestSingleInstanceLock();
+
+const whatsappOrigin = 'https://web.whatsapp.com';
 
 // Fix notifications on Windows/Linux
 if (process.platform === 'linux' || process.platform === 'win32') {
@@ -60,10 +64,28 @@ function togglePrivacy() {
   }
 }
 
+function isWhatsAppRequest(webContents, details) {
+  try {
+    const url = details?.requestingUrl || webContents.getURL();
+    return new URL(url).origin === whatsappOrigin;
+  } catch {
+    return false;
+  }
+}
+
+function isAllowedOrigin(origin) {
+  try {
+    return new URL(origin).origin === whatsappOrigin;
+  } catch {
+    return false;
+  }
+}
+
+
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -75,6 +97,39 @@ function createWindow() {
     autoHideMenuBar: true,
     icon: path.join(__dirname, 'icon.png')
   });
+
+  // Handle permissions for camera mic and notifications
+  mainWindow.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
+    if (permission === 'notifications') {
+      return isAllowedOrigin(requestingOrigin);
+    }
+
+    if (permission !== 'media' || !isAllowedOrigin(requestingOrigin)) {
+      return false;
+    }
+
+    if (details.mediaType === 'audio') return mediaEnabled.audio;
+    if (details.mediaType === 'video') return mediaEnabled.video;
+    return false;
+  });
+
+mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback, details) => {
+  if (permission === 'notifications') {
+    return callback(isWhatsAppRequest(webContents, details));
+  }
+
+  const mediaTypes = details.mediaTypes || [];
+  const allowed = permission === 'media'
+    && isWhatsAppRequest(webContents, details)
+    && mediaTypes.length > 0
+    && mediaTypes.every((type) =>
+      type === 'audio' ? mediaEnabled.audio
+        : type === 'video' ? mediaEnabled.video
+          : false
+    );
+
+  callback(allowed);
+});
 
   // Open DevTools for debugging (disabled in production)
   // mainWindow.webContents.openDevTools();
@@ -103,7 +158,7 @@ function createWindow() {
   //   });
   // });
 
-  mainWindow.loadURL('https://web.whatsapp.com');
+  mainWindow.loadURL(whatsappOrigin);
 
   // Security: Open links in external browser with proper validation
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -126,21 +181,6 @@ function createWindow() {
       event.preventDefault();
       mainWindow.hide();
       return false;
-    }
-  });
-
-  // Handle Notifications permission
-  mainWindow.webContents.session.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
-    if (permission === 'notifications') {
-      return true;
-    }
-    return false;
-  });
-  mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-    if (permission === 'notifications') {
-      callback(true);
-    } else {
-      callback(false);
     }
   });
 
@@ -192,7 +232,23 @@ function createWindow() {
   });
 }
 
+
+// Checks if app is already open in tray
+// (prevents launching a second instance (which breaks credentials if it happens, talking from experience))
+if (!locked) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+}
+
 app.whenReady().then(() => {
+  if (!locked) return;
   createWindow();
   createTray();
 

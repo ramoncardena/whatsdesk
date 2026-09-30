@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-appimage",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Secure WhatsApp desktop client for Linux with enhanced privacy features",
   "main": "main.js",
   "scripts": {
@@ -32,6 +32,6 @@
   "type": "commonjs",
   "devDependencies": {
     "electron": "^39.2.7",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.15.3"
   }
 }
