@@ -14,9 +14,12 @@ ipcRenderer.on('toggle-privacy', () => {
 });
 
 // Generate badge icon when requested
-ipcRenderer.on('generate-badge', (event, count) => {
+ipcRenderer.on('generate-badge', (event, count, iconDataUrl) => {
   // Sanitize count to ensure it's a safe number
   const safeCount = Math.max(0, Math.min(9999, parseInt(count, 10) || 0));
+  if (typeof iconDataUrl !== 'string' || !iconDataUrl.startsWith('data:image/png;base64,')) {
+    return;
+  }
 
   // Generate badge with count overlay
   const canvas = document.createElement('canvas');
@@ -25,10 +28,8 @@ ipcRenderer.on('generate-badge', (event, count) => {
   const ctx = canvas.getContext('2d');
   const img = new Image();
 
-  // Get current favicon
-  const link = document.querySelector("link[rel*='icon']");
-  img.crossOrigin = "Anonymous";
-  img.src = link ? link.href : '';
+  // Draw on the app's own icon, not the page favicon (which is WhatsApp's logo)
+  img.src = iconDataUrl;
 
   img.onload = () => {
     try {
@@ -60,7 +61,7 @@ ipcRenderer.on('generate-badge', (event, count) => {
   };
 
   img.onerror = () => {
-    console.error('Failed to load favicon for badge generation');
+    console.error('Failed to load app icon for badge generation');
   };
 });
 
@@ -68,5 +69,5 @@ ipcRenderer.on('generate-badge', (event, count) => {
 // Currently not used but available for future extensions
 contextBridge.exposeInMainWorld('electronAPI', {
   // Placeholder for future secure APIs
-  version: '2.0.0'
+  version: '2.1.0'
 });

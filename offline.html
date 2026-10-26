@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+  <title>WhatsDesk - Offline</title>
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --text: #111b21;
+      --muted: #54656f;
+      --accent: #2A8A5A;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b141a;
+        --card: #202c33;
+        --text: #e9edef;
+        --muted: #8696a0;
+      }
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .card {
+      max-width: 420px;
+      padding: 40px 48px;
+      text-align: center;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      font-weight: 500;
+    }
+    p {
+      margin: 0 0 24px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    a.button {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 24px;
+      background: var(--accent);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    small {
+      display: block;
+      margin-top: 24px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>No internet connection</h1>
+    <p>WhatsApp Web could not be reached. Check your network connection.
+      The app will reconnect automatically once you are back online.</p>
+    <a class="button" href="https://web.whatsapp.com">Try again</a>
+    <small>WhatsDesk · Unofficial client for WhatsApp Web</small>
+  </div>
+</body>
+</html>

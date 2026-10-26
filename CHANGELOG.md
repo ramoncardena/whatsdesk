@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-10-26
+
+### Changed
+
+- Renamed the app from "WhatsApp" to **WhatsDesk** to make clear it is an unofficial client and avoid trademark issues
+  - App ID changed from `com.whatsapp.appimage` to `com.ramoncardena.whatsdesk`
+  - The AppImage is now named `WhatsDesk-<version>.AppImage`
+  - Existing user data is moved automatically from `~/.config/WhatsApp` to `~/.config/WhatsDesk` on first launch, so users stay logged in
+- New original app icon (source in `icon.svg`) replacing the WhatsApp logo
+- The unread badge on the window and tray icon is now drawn on the app's own icon instead of WhatsApp's favicon
+
+### Added
+
+- Offline page shown when WhatsApp Web can't be reached, instead of a blank window; the app reconnects automatically once the network is back
+
 ## [2.0.0] - 2026-01-12
 
 ### 🔒 Security (BREAKING CHANGES)

@@ -1,7 +1,8 @@
 {
   "name": "whatsapp-appimage",
-  "version": "2.0.0",
-  "description": "Secure WhatsApp desktop client for Linux with enhanced privacy features",
+  "productName": "WhatsDesk",
+  "version": "2.1.0",
+  "description": "Unofficial desktop client for WhatsApp Web on Linux, with privacy features",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,8 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
-    "appId": "com.whatsapp.appimage",
-    "productName": "WhatsApp",
+    "appId": "com.ramoncardena.whatsdesk",
+    "productName": "WhatsDesk",
     "linux": {
       "target": "AppImage",
       "category": "Network",

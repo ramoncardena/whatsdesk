@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3FAF6C"/>
+      <stop offset="1" stop-color="#1C6B4A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="64" y="64" width="896" height="896" rx="208" fill="url(#bg)"/>
+
+  <!-- Monitor screen -->
+  <rect x="212" y="248" width="600" height="404" rx="72" fill="#FFFFFF"/>
+
+  <!-- Typing indicator -->
+  <circle cx="392" cy="450" r="46" fill="#2A8A5A"/>
+  <circle cx="512" cy="450" r="46" fill="#2A8A5A"/>
+  <circle cx="632" cy="450" r="46" fill="#2A8A5A"/>
+
+  <!-- Stand -->
+  <rect x="468" y="640" width="88" height="96" fill="#FFFFFF"/>
+  <rect x="352" y="720" width="320" height="56" rx="28" fill="#FFFFFF"/>
+</svg>

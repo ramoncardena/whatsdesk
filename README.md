@@ -1,12 +1,14 @@
-# WhatsApp AppImage for Linux
+# WhatsDesk
 
-![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Electron](https://img.shields.io/badge/Electron-39.x-47848F?logo=electron&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-linux-lightgrey.svg)
 ![AppImage](https://img.shields.io/badge/Package-AppImage-red.svg)
 
 
-**The ultimate unofficial WhatsApp Desktop client for Linux.** 
+**An unofficial desktop client for WhatsApp Web on Linux.** 
+
+> WhatsDesk was previously called "WhatsApp AppImage". When you upgrade from v2.0.0 or earlier, your existing session and settings are moved automatically from `~/.config/WhatsApp` to `~/.config/WhatsDesk`, so you stay logged in.
 
 A privacy-focused, lightweight Electron wrapper packaged as a universal **AppImage**. Runs instantly on **Ubuntu**, **Debian**, **Fedora**, **Arch Linux**, **Linux Mint**, **Manjaro**, and more—no installation required. 
 
@@ -42,11 +44,11 @@ For security concerns or to report vulnerabilities, see [SECURITY.md](SECURITY.m
 1.  Download the latest `.AppImage` from the [releases page](#) (or build it yourself).
 2.  Make it executable:
     ```bash
-    chmod +x WhatsApp-1.0.2.AppImage
+    chmod +x WhatsDesk-*.AppImage
     ```
 3.  Run it:
     ```bash
-    ./WhatsApp-1.2.0.AppImage
+    ./WhatsDesk-*.AppImage
     ```
 
 ### Shortcuts & Tips
@@ -81,7 +83,7 @@ sudo sysctl --system
 ⚠️ **Security Warning:** This significantly reduces security protections. Only use if you understand the risks.
 
 ```bash
-./WhatsApp-2.0.0.AppImage --no-sandbox
+./WhatsDesk-*.AppImage --no-sandbox
 ```
 
 When running without sandbox:
@@ -120,4 +122,4 @@ npm start
 
 ## Disclaimer
 
-This project is an unofficial wrapper and is not affiliated with, associated with, authorized by, endorsed by, or in any way officially connected with WhatsApp or Meta. The official WhatsApp website can be found at https://www.whatsapp.com.
+WhatsDesk is an unofficial wrapper around WhatsApp Web and is not affiliated with, associated with, authorized by, endorsed by, or in any way officially connected with WhatsApp or Meta. The official WhatsApp website can be found at https://www.whatsapp.com. WhatsApp is a trademark of WhatsApp LLC.

@@ -1,10 +1,36 @@
-const { app, BrowserWindow, shell, Tray, Menu, globalShortcut, nativeImage, ipcMain } = require('electron');
+const { app, BrowserWindow, shell, Tray, Menu, globalShortcut, nativeImage, ipcMain, net } = require('electron');
 const path = require('path');
+const fs = require('fs');
+
+const WHATSAPP_URL = 'https://web.whatsapp.com';
 
 // Fix notifications on Windows/Linux
 if (process.platform === 'linux' || process.platform === 'win32') {
-  app.setAppUserModelId('com.whatsapp.appimage');
+  app.setAppUserModelId('com.ramoncardena.whatsdesk');
 }
+
+// Versions up to 2.0.0 were named "WhatsApp" and stored their data in ~/.config/WhatsApp.
+// Move it to the WhatsDesk folder on first launch so users stay logged in.
+// Must run before the app is ready, i.e. before Chromium starts using the user data folder.
+function migrateLegacyUserData() {
+  const legacyDir = path.join(app.getPath('appData'), 'WhatsApp');
+  const userDataDir = app.getPath('userData');
+  // Electron creates an empty userData folder before this runs, so only skip if it already holds data
+  const hasUserData = fs.existsSync(userDataDir) && fs.readdirSync(userDataDir).length > 0;
+  if (!fs.existsSync(legacyDir) || hasUserData) {
+    return;
+  }
+  try {
+    if (fs.existsSync(userDataDir)) {
+      fs.rmdirSync(userDataDir); // only removes it if empty
+    }
+    fs.renameSync(legacyDir, userDataDir);
+    console.log(`Migrated user data from ${legacyDir} to ${userDataDir}`);
+  } catch (e) {
+    console.error('Failed to migrate user data, starting with a fresh profile:', e);
+  }
+}
+migrateLegacyUserData();
 
 // Security: Only disable sandbox if explicitly requested via command line
 // This is a significant security reduction and should only be used when necessary
@@ -25,7 +51,7 @@ function createTray() {
   tray = new Tray(path.join(__dirname, 'icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show WhatsApp',
+      label: 'Show WhatsDesk',
       click: () => {
         mainWindow.show();
       }
@@ -45,7 +71,7 @@ function createTray() {
       }
     }
   ]);
-  tray.setToolTip('WhatsApp');
+  tray.setToolTip('WhatsDesk');
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {
@@ -103,7 +129,30 @@ function createWindow() {
   //   });
   // });
 
-  mainWindow.loadURL('https://web.whatsapp.com');
+  // Load failures are handled by the did-fail-load listener below
+  mainWindow.loadURL(WHATSAPP_URL).catch(() => {});
+
+  // Show a local offline page instead of a blank window when WhatsApp Web can't be reached,
+  // and reload automatically once the network is back
+  let reconnectTimer = null;
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+    // -3 (ERR_ABORTED) happens on normal redirects/navigations and is not a real failure
+    if (!isMainFrame || errorCode === -3 || !validatedURL.startsWith(WHATSAPP_URL)) {
+      return;
+    }
+    console.warn(`Failed to load WhatsApp Web (${errorDescription}), showing offline page`);
+    mainWindow.loadFile(path.join(__dirname, 'offline.html'));
+
+    if (!reconnectTimer) {
+      reconnectTimer = setInterval(() => {
+        if (net.isOnline()) {
+          clearInterval(reconnectTimer);
+          reconnectTimer = null;
+          mainWindow.loadURL(WHATSAPP_URL).catch(() => {});
+        }
+      }, 5000);
+    }
+  });
 
   // Security: Open links in external browser with proper validation
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
@@ -144,6 +193,11 @@ function createWindow() {
     }
   });
 
+  // The badge is drawn on top of the app's own icon
+  const badgeBaseIcon = nativeImage.createFromPath(path.join(__dirname, 'icon.png'))
+    .resize({ width: 64, height: 64 })
+    .toDataURL();
+
   // Update Tray Tooltip with unread count
   mainWindow.on('page-title-updated', (event, title) => {
     // WhatsApp title format: "(3) WhatsApp" or just "WhatsApp"
@@ -159,13 +213,13 @@ function createWindow() {
 
     // Security: Request badge generation via IPC instead of injecting code
     // This sends a message to the preload script which will generate the badge safely
-    mainWindow.webContents.send('generate-badge', count);
+    mainWindow.webContents.send('generate-badge', count, badgeBaseIcon);
 
     if (tray) {
       if (count > 0) {
-        tray.setToolTip(`WhatsApp (${count} unread)`);
+        tray.setToolTip(`WhatsDesk (${count} unread)`);
       } else {
-        tray.setToolTip('WhatsApp');
+        tray.setToolTip('WhatsDesk');
       }
     }
   });
