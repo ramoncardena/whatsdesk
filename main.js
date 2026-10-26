@@ -32,6 +32,19 @@ function migrateLegacyUserData() {
 }
 migrateLegacyUserData();
 
+// Only allow one instance: launching again focuses the existing window instead of adding a second tray icon.
+// Must run after the migration, since the lock lives in the user data folder.
+if (!app.requestSingleInstanceLock()) {
+  app.exit(0);
+}
+
+app.on('second-instance', () => {
+  if (mainWindow) {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
 // Security: Only disable sandbox if explicitly requested via command line
 // This is a significant security reduction and should only be used when necessary
 if (process.argv.includes('--no-sandbox')) {

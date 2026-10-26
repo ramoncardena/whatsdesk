@@ -69,5 +69,5 @@ ipcRenderer.on('generate-badge', (event, count, iconDataUrl) => {
 // Currently not used but available for future extensions
 contextBridge.exposeInMainWorld('electronAPI', {
   // Placeholder for future secure APIs
-  version: '2.1.0'
+  version: '2.1.1'
 });

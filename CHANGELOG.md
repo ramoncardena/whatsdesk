@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2026-10-26
+
+### Fixed
+
+- Launching the app while it is already running no longer starts a second instance with a second tray icon; the existing window is brought to the front instead
+
+### Changed
+
+- The GitHub repository was renamed from `whatsapp-appimage` to `whatsdesk` (old links redirect automatically)
+
 ## [2.1.0] - 2026-10-26
 
 ### Changed

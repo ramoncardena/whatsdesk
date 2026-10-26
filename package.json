@@ -1,7 +1,7 @@
 {
-  "name": "whatsapp-appimage",
+  "name": "whatsdesk",
   "productName": "WhatsDesk",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Unofficial desktop client for WhatsApp Web on Linux, with privacy features",
   "main": "main.js",
   "scripts": {

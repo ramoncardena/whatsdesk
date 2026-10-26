@@ -41,7 +41,7 @@ For security concerns or to report vulnerabilities, see [SECURITY.md](SECURITY.m
 
 ### Running the AppImage
 
-1.  Download the latest `.AppImage` from the [releases page](#) (or build it yourself).
+1.  Download the latest `.AppImage` from the [releases page](https://github.com/ramoncardena/whatsdesk/releases) (or build it yourself).
 2.  Make it executable:
     ```bash
     chmod +x WhatsDesk-*.AppImage
@@ -97,8 +97,8 @@ Requirements: Node.js (v14+ recommended) and `npm`.
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/whatsapp-appimage.git
-    cd whatsapp-appimage
+    git clone https://github.com/ramoncardena/whatsdesk.git
+    cd whatsdesk
     ```
 
 2.  Install dependencies:
